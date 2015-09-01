@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<script type="text/javascript">
+			var callback = function(){
+				console.log("함수 호출1");
+			};
+			
+			function callTenTimes(arg){
+				arg();
+				
+			}
+			callTenTimes(callback);
+			callTenTimes(function(){
+				console.log("함수 호출2");
+			});
+		</script>
+	</head>
+	
+	<body>
+		
+	</body>
+</html>

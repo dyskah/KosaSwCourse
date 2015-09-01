@@ -1,0 +1,41 @@
+*{
+	margin : 0px;
+	padding: 0px;
+	text-align: center;
+}
+
+.fullscreen{
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	
+}
+
+.top{
+	height: 20px;
+	background-color: #c8c8c8;
+	
+	
+}
+.middle{
+	flex:1;
+	display: flex;
+	flex-direction: row;
+	
+}
+.left{
+	background-color: #969696;
+	width: 100px;
+}
+.center{
+	background-color:white;
+	flex:1;
+}
+.right{
+	background-color: #969696;
+	width: 100px;
+}
+.bottom{
+	height: 20px;
+	background-color: #c8c8c8;
+}

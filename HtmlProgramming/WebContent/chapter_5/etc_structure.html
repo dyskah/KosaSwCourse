@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>20150815</title>
+		<style type="text/css">
+			#menu li{
+				list-style: none;
+				float: left;
+				padding: 15px;
+				
+			}
+			#menu li:FIRST-CHILD {
+				border-readius: 10px 0px 0px 10px
+			}
+			#menu li:nth-child(2n){
+				background: gray;
+			}
+			#menu li:nth-child(2n+1){
+				background: darkgray;
+			}
+			#menu li:last_child{
+				border-readius: 0px 10px 10px 0px
+			
+			}
+			
+		</style>
+	
+	</head>
+	
+	<body>
+		<ul id="menu">
+			<li>첫 번째</li>
+			<li>두 번째</li>
+			<li>세 번째</li>
+			<li>네 번째</li>
+			<li>다섯 번째</li>
+			<li>여섯 번째</li>
+			<li>일곱 번째</li>
+			
+		</ul>
+		
+	</body>
+</html>
+
+<!-- :first-child	p:first-child	Selects every <p> element that is the first child of its parent -->
