@@ -30,12 +30,16 @@ public class ProductService {
            return product;
 	}
 	
-	public void modify(Product product){
+	public void update(Product product){
 			productDao.update(product);
 	}
 	
 	public void remove(int productNo){
 			productDao.delete(productNo);
+	}
+	public int getTotalProductNo(){
+		int rows = productDao.selectCount();
+		return rows;
 	}
 
 }

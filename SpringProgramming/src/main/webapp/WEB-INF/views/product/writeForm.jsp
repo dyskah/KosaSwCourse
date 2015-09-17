@@ -19,7 +19,7 @@
 	</head>
 	
 	<body>
-		<form method="post" action="write">
+		<form method="post" action="write" enctype="multipart/form-data">
 			<table id="form_table">
 				<h2>상품 입력</h2>
 				<tr>
@@ -41,6 +41,10 @@
 				<tr>
 					<td>설명</td>
 					<td><textarea name="content" rows="5" cols="50"></textarea></td>
+				</tr>
+				<tr>
+					<td>첨부</td>
+					<td><input type="file" name="attach"/></td>
 				</tr>
 			</table>
 			<input type="submit" value="글올리기"/>

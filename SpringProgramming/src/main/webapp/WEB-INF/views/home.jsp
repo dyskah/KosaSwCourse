@@ -87,7 +87,7 @@
 			}
 			
 			#content2 #menu a:hover {
-				color: orange;
+				color: olive;
 			}
 			
 			#content2 #content {

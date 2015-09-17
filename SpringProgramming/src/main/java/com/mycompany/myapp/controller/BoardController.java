@@ -1,15 +1,20 @@
 package com.mycompany.myapp.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mycompany.myapp.dto.Board;
 import com.mycompany.myapp.service.BoardService;
@@ -22,8 +27,10 @@ public class BoardController {
 	private BoardService boardService;
 	
 	@RequestMapping("/board/list")
-	public String list(@RequestParam(defaultValue="1") int pageNo, HttpServletRequest request){
+	public String list(@RequestParam(defaultValue="1") int pageNo, Model model, HttpSession session){
 		logger.info("list()");
+		
+		session.setAttribute("pageNo", pageNo);
 		
 		//페이징을 위한 변수선언
 		int rowsPerPage = 10;
@@ -50,17 +57,16 @@ public class BoardController {
 		
 		//현재 페이지 게시물 리스트
 		List<Board> list = boardService.getPage(pageNo, rowsPerPage);
-		request.setAttribute("list",list);
 		
 		//View로 넘길 데이터
-		request.setAttribute("pagesPerGroup", pagesPerGroup);
-		request.setAttribute("totalPageNo", totalPageNo);
-		request.setAttribute("totalGroupNo", totalGroupNo);
-		request.setAttribute("groupNo", totalGroupNo);
-		request.setAttribute("startPageNo", startPageNo);
-		request.setAttribute("endPageNo", endPageNo);
-		request.setAttribute("pageNo", pageNo);
-		request.setAttribute("list",list);
+		model.addAttribute("pagesPerGroup", pagesPerGroup);
+		model.addAttribute("totalPageNo", totalPageNo);
+		model.addAttribute("totalGroupNo", totalGroupNo);
+		model.addAttribute("groupNo", groupNo);
+		model.addAttribute("startPageNo", startPageNo);
+		model.addAttribute("endPageNo", endPageNo);
+		model.addAttribute("pageNo", pageNo);
+		model.addAttribute("list",list);
 		
 		return "board/list";
 	}
@@ -71,25 +77,89 @@ public class BoardController {
 		return "board/writeForm";
 	}
 	@RequestMapping("/board/updateForm")
-	public String updateForm(){
+	public String updateForm(int boardNo,Model model){
+		boardService.addHitcount(boardNo);
+		Board board = boardService.getBoard(boardNo);
+		model.addAttribute("board",board);
 		logger.info("updateForm()");
 		return "board/updateForm";
 	}
 	
 	@RequestMapping("/board/write")
-	public String write(String title, String writer, String content){
+	/*public String write(
+			String title,
+			String writer,
+			String content,
+			MultipartFile attach,
+			HttpSession session){*/
+	public String write(
+			Board board,
+			HttpSession session){
 		logger.info("write()");
 		
-		Board board = new Board();
+		//파일 정보 얻기
+		ServletContext application = session.getServletContext();
+		String dirPath = application.getRealPath("/resources/uploadfiles");
+		String originalFilename = board.getAttach().getOriginalFilename();
+		String filesystemName = System.currentTimeMillis() + "-"+ originalFilename;
+		String contentType = board.getAttach().getContentType();
+		
+		if(!board.getAttach().isEmpty()){
+		//파일에 저장하기
+			try {
+				board.getAttach().transferTo(new File(dirPath + "/" + filesystemName));
+			} catch (Exception e) {e.printStackTrace();}
+		}
+		
+		
+		//데이터 베이스에 게시물 정보저장
+		/*Board board = new Board();
 		board.setTitle(title);
 		board.setWriter(writer);
 		board.setContent(content);
+		*/
+		if(!board.getAttach().isEmpty()){
+		board.setOriginalFileName(originalFilename);
+		board.setFilesystemName(filesystemName);
+		board.setContentType(contentType);
+		}
 		boardService.add(board);
+		
+		
+		
+	/*	Board board = new Board();
+		board.setTitle(title);
+		board.setWriter(writer);
+		board.setContent(content);
+		boardService.add(board);*/
 		return "redirect:/board/list";
 	}
 	@RequestMapping("/board/update")
-	public String update(){
+	public String update(Board board){
 		logger.info("update()");
-		return "redirect:/board/update";
+		
+		boardService.modify(board);
+		return "redirect:/board/detail?boardNo="+ board.getNo();
 	}
+	@RequestMapping("/board/detail")
+	public String detail(int boardNo, Model model){
+		boardService.addHitcount(boardNo);
+		Board board = boardService.getBoard(boardNo);
+		model.addAttribute("board",board);
+		
+		return "board/detail";
+	}
+	
+	@RequestMapping("/board/delete")
+	public String delete(int boardNo){
+		boardService.remove(boardNo);
+		return "redirect:/board/list";
+	}
+	
+	
+	
+	
+	
+	
+	
 }
