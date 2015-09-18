@@ -7,16 +7,19 @@ import com.mycompany.myapp.ApplicationContextLoader;
 import com.mycompany.myapp.dto.Board;
 
 public class BoardServiceTest extends ApplicationContextLoader {
-
+	
+	
+	
 	@Autowired
 	private BoardService boardService;
 	
 	@Test
 	public void testAdd(){
 		Board board = new Board();
-		board.setTitle("Á¦¸ñ");
-		board.setContent("³»¿ë");
-		board.setWriter("±Û¾´ÀÌ");
+		board.setTitle("í…ŒìŠ¤íŠ¸1");
+		board.setContent("í…ŒìŠ¤íŠ¸ ë‚´ìš©1");
+		board.setWriter("ê¸€ì“´ì´1");
 		boardService.add(board);
+		
 	}
 }
